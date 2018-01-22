@@ -13,6 +13,15 @@ void ShoeMessageStatus::parseData(QByteArray data)
         timearea = data[3];
         timeInterval = data[4];
     }
+
+    if(data.length() == 6)
+    {
+        messageType = data[1];
+        power = data[2];
+        firmwareVersion = data[3];
+        timearea = data[4];
+        timeInterval = data[5];
+    }
 }
 
 QJsonObject ShoeMessageStatus::getObject()

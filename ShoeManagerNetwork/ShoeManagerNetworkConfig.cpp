@@ -8,10 +8,10 @@ ShoeManagerNetworkConfig *ShoeManagerNetworkConfig::getInstance()
 
 ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
 {
-#define LoaclServer
+//#define LoaclServer
 #ifdef LoaclServer
     mServer = "http://127.0.0.1:5555/api/v2.0/";
-   #else
+#else
     mServer = "http://www.shakeda.com:5555/api/v2.0/";
 #endif
 
@@ -29,6 +29,16 @@ ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
     mApi_bindDevices = "account/devices";
     mApi_bindDevice = "account/devices/add";
     mApi_unbindDevice = "account/devices/remove";
+
+
+    mApi_deviceOnline = "devicemanager/setonline";
+    mApi_deviceOffline = "devicemanager/setoffline";
+    mApi_isDeviceOnline = "devicemanager/isonline";
+    mApi_setDeviceStatus = "devicemanager/setstatus";
+    mApi_getDeviceStatus = "devicemanager/getstatus";
+//    mApi_setDeviceGPS = ;
+//    mApi_setDeviceWifiLBS = ;
+//    mApi_getDevicePosition = ;
 }
 
 QString ShoeManagerNetworkConfig::getApi_passwordUpdate() const

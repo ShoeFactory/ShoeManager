@@ -62,7 +62,11 @@ void ShoeCommandExecutor::slotDisconnected(const int nDescriptor)
     mDescriptorIMEI.remove(nDescriptor);
     auto imei = mDescriptorIMEI.value(nDescriptor);
     auto *result = ShoeManagerNetwork::getInstance()->deviceOnline(imei);
-    Q_UNUSED(result)
+
+    connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
+        qDebug() << result->oRequestData["requestUrl"].toString()
+                << result->oReturnData << result->oReturnMessage;
+    });
 }
 
 void ShoeCommandExecutor::slotPacketReceived(const ShoeMessagePacket &packet, const int nDescriptor)
@@ -102,7 +106,7 @@ void ShoeCommandExecutor::slotPacketReceived(const ShoeMessagePacket &packet, co
 void ShoeCommandExecutor::receiveLogin(const int nDescriptor, QByteArray content)
 {
     ShoeMessageLogin loginReceived;
-    loginReceived.setData(content);
+    loginReceived.parseData(content);
 
     ShoeMessagePacket packet;
     packet.msgType = PacketType_Login;
@@ -113,7 +117,12 @@ void ShoeCommandExecutor::receiveLogin(const int nDescriptor, QByteArray content
     mDescriptorIMEI.insert(nDescriptor, IMEI);
 
     auto *result = ShoeManagerNetwork::getInstance()->deviceOnline(IMEI);
-    Q_UNUSED(result)
+
+    connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
+        qDebug() << "imei" << IMEI;
+        qDebug() << result->oRequestData["requestUrl"].toString()
+                << result->oReturnCode << result->oReturnMessage;
+    });
 }
 
 void ShoeCommandExecutor::receiveUpdateTime(const int nDescriptor, QByteArray content)
@@ -142,7 +151,10 @@ void ShoeCommandExecutor::receiveStatus(const int nDescriptor, QByteArray conten
 
     auto *result = ShoeManagerNetwork::getInstance()->setDeviceStatus(imei,
                                                                       status.getObject());
-    Q_UNUSED(result)
+    connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
+        qDebug() << result->oRequestData["requestUrl"].toString()
+                << result->oReturnCode << result->oReturnMessage;
+    });
 }
 
 void ShoeCommandExecutor::receiveHearBeat(const int nDescriptor, QByteArray content)
@@ -160,7 +172,11 @@ void ShoeCommandExecutor::receiveGPS(const int nDescriptor, QByteArray content)
 
     auto *result = ShoeManagerNetwork::getInstance()->setDeviceGPS(imei,
                                                                    gps.getObject());
-    Q_UNUSED(result)
+
+    connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
+        qDebug() << result->oRequestData["requestUrl"].toString()
+                << result->oReturnCode << result->oReturnMessage;
+    });
 }
 
 
@@ -192,7 +208,11 @@ void ShoeCommandExecutor::receiveWifiPosition(const int nDescriptor, QByteArray 
 
     auto *result = ShoeManagerNetwork::getInstance()->setDeviceWifiLBS(imei,
                                                                       wifiPosition.getObject());
-    Q_UNUSED(result)
+
+    connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
+        qDebug() << result->oRequestData["requestUrl"].toString()
+                << result->oReturnCode << result->oReturnMessage;
+    });
 }
 
 

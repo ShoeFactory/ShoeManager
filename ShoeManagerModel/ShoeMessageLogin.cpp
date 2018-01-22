@@ -1,17 +1,6 @@
 #include <QString>
 #include "ShoeMessageLogin.h"
 
-ShoeMessageLogin::ShoeMessageLogin()
-{
-
-}
-
-ShoeMessageLogin::ShoeMessageLogin(const ShoeMessageLogin &other)
-{
-    m_imei = other.m_imei;
-    m_version = other.m_version;
-}
-
 QString ShoeMessageLogin::getIMEI()
 {
     /**
@@ -20,35 +9,18 @@ QString ShoeMessageLogin::getIMEI()
       *  123456789012345 第一个去掉
       *
      */
-    QString result = QString(m_imei.toHex());
-    return  result.remove(0, 1);
+    return mIMEI;
 }
 
-QByteArray ShoeMessageLogin::getData() const
+void ShoeMessageLogin::parseData(QByteArray data)
 {
-    QByteArray result;
+    // 登录包是个异常包
+    // 0d 01 0356314041406741 35
+    auto imeiBytes = data.mid(2, 8);
+    auto versionBytes = data.right(1);
 
-    result.append(m_imei);
-    result.append(m_version);
+    mIMEI = imeiBytes.toHex();
+    mIMEI = mIMEI.remove(0, 1);
 
-    return result;
-}
-
-void ShoeMessageLogin::setData(QByteArray data)
-{
-    m_imei.clear();
-    m_imei = data.left(8);
-
-    m_version.clear();
-    m_version=data.right(1);
-}
-
-void ShoeMessageLogin::setIMEI(QByteArray imei)
-{
-    m_imei = imei;
-}
-
-void ShoeMessageLogin::setVersion(QByteArray version)
-{
-    m_version = version;
+    mVersion = versionBytes.toHex();
 }
