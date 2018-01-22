@@ -26,14 +26,6 @@ public:
     void setHeatBeatInterval(const int secs);
     void heartBeat(const int nDescriptor);
 
-signals:
-    void onListeningStatus(bool isListening);
-    void onConnected(const int nDescriptor);
-    void onDisconnected(const int nDescriptor);
-    void onPacketReceived(const ShoeMessagePacket& packet, const int nDescriptor);
-    void onPacketSend(const ShoeMessagePacket& packet, const int nDescriptor);
-    void onErrorOccurred(const QString& errorString, const int nDescriptor);
-
 private:
     /**< 客户Socket管理链表 >**/
     QList<ShoeTcpSocket*> m_socketList;

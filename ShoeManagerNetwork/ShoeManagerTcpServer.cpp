@@ -6,13 +6,6 @@ ShoeManagerTcpServer::ShoeManagerTcpServer(QObject *parent)
     : QObject(parent)
 {
     d_ptr = new ShoeManagerTcpServerPrivate(this);
-
-    connect(d_ptr, &ShoeManagerTcpServerPrivate::onListeningStatus, this, &ShoeManagerTcpServer::onListeningStatus);
-    connect(d_ptr, &ShoeManagerTcpServerPrivate::onConnected, this, &ShoeManagerTcpServer::onConnected);
-    connect(d_ptr, &ShoeManagerTcpServerPrivate::onDisconnected, this, &ShoeManagerTcpServer::onDisconnected);
-    connect(d_ptr, &ShoeManagerTcpServerPrivate::onPacketReceived, this, &ShoeManagerTcpServer::onPacketReceived);
-    connect(d_ptr, &ShoeManagerTcpServerPrivate::onPacketSend, this, &ShoeManagerTcpServer::onPacketSend);
-    connect(d_ptr, &ShoeManagerTcpServerPrivate::onErrorOccurred, this, &ShoeManagerTcpServer::onErrorOccurred);
 }
 
 ShoeManagerTcpServer::~ShoeManagerTcpServer()

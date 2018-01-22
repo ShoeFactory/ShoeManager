@@ -21,7 +21,7 @@ bool ShoeManagerTcpServerPrivate::initialize(int port)
         }
 
         bRet = true;
-        emit onListeningStatus(true);
+        emit q_ptr->onListeningStatus(true);
     } while(false);
 
     return bRet;
@@ -40,7 +40,7 @@ bool ShoeManagerTcpServerPrivate::finalize()
             socket->close();
         }
 
-        emit onListeningStatus(false);
+        emit q_ptr->onListeningStatus(false);
     }
     return true;
 }
@@ -96,11 +96,11 @@ void ShoeManagerTcpServerPrivate::incomingConnection(qintptr nSocketDescriptor)
     socket->setSocketID(nSocketDescriptor);
     socket->setSocketDescriptor(nSocketDescriptor);
 
-    connect(socket, SIGNAL(onConnected(int)), this, SIGNAL(onConnected(int)));
+    connect(socket, SIGNAL(onConnected(int)), q_ptr, SIGNAL(onConnected(int)));
     connect(socket, SIGNAL(onDisonnected(int)), this, SLOT(slotSocketDisconnected(int)));
-    connect(socket, SIGNAL(onPacketSend(ShoeMessagePacket,int)), this, SIGNAL(onPacketSend(ShoeMessagePacket, int)));
-    connect(socket, SIGNAL(onPacketReceived(ShoeMessagePacket, int)), this, SIGNAL(onPacketReceived(ShoeMessagePacket,int)));
-    connect(socket, SIGNAL(onErrorOccurred(QString, int)), this, SIGNAL(onErrorOccurred(QString,int)));
+    connect(socket, SIGNAL(onPacketSend(ShoeMessagePacket,int)), q_ptr, SIGNAL(onPacketSend(ShoeMessagePacket, int)));
+    connect(socket, SIGNAL(onPacketReceived(ShoeMessagePacket, int)), q_ptr, SIGNAL(onPacketReceived(ShoeMessagePacket,int)));
+    connect(socket, SIGNAL(onErrorOccurred(QString, int)), q_ptr, SIGNAL(onErrorOccurred(QString,int)));
 
     // 高调显示 新的连接产生了
     emit socket->onConnected(nSocketDescriptor);
@@ -123,7 +123,7 @@ void ShoeManagerTcpServerPrivate::slotSocketDisconnected(const int nDescriptor)
         socket->deleteLater();
     }
 
-    emit onDisconnected(nDescriptor);
+    emit q_ptr->onDisconnected(nDescriptor);
 }
 
 void ShoeManagerTcpServerPrivate::slotCheckHeartBeat()

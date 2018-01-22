@@ -1,4 +1,4 @@
-#include "ShoeManagerTcpSocket.hpp"
+﻿#include "ShoeManagerTcpSocket.hpp"
 
 ShoeTcpSocket::ShoeTcpSocket(QObject *parent)
     :QTcpSocket(parent)
