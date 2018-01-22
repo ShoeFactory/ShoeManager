@@ -104,7 +104,7 @@ QUtilsFramelessWidget::QUtilsFramelessWidget(QWidget *parent)
                               "}");
 
     // 无边框处理
-    setWindowFlag(Qt::FramelessWindowHint);
+    setWindowFlags(windowFlags() | Qt::FramelessWindowHint);
 
     pHelper = new FramelessHelper(this);
     pHelper->activateOn(this);              //激活当前窗体
