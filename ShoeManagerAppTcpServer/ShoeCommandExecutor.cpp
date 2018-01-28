@@ -59,14 +59,15 @@ void ShoeCommandExecutor::slotDisconnected(const int nDescriptor)
 {
     qDebug() << "[断开" + QString::number(nDescriptor) + "]";
 
-    mDescriptorIMEI.remove(nDescriptor);
     auto imei = mDescriptorIMEI.value(nDescriptor);
-    auto *result = ShoeManagerNetwork::getInstance()->deviceOnline(imei);
+    auto *result = ShoeManagerNetwork::getInstance()->deviceOffline(imei);
 
     connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
         qDebug() << result->oRequestData["requestUrl"].toString()
                 << result->oReturnData << result->oReturnMessage;
     });
+
+    mDescriptorIMEI.remove(nDescriptor);
 }
 
 void ShoeCommandExecutor::slotPacketReceived(const ShoeMessagePacket &packet, const int nDescriptor)

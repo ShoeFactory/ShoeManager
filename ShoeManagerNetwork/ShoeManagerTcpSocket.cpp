@@ -81,6 +81,9 @@ void ShoeTcpSocket::receiveRule(QByteArray &recvBuffer)
         qDebug()<<"recvBuffer "<< recvBuffer.toHex() << stopPosition;
         // 78 78 0d 01 03 56 31 40 41 40 67 41 35 0d0a  13
         // 78 78 01 08 0d0a  4
+
+        // 78 78 0a 01 01 23 45 67 89 01 23 45 35 0d0a  13
+
         // 没找到 退出
         if(stopPosition == -1)
         {
