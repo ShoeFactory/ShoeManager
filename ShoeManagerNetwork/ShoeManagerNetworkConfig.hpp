@@ -33,8 +33,8 @@ public:
     QString getApi_isDeviceOnline();
     QString getApi_setDeviceStatus();
     QString getApi_getDeviceStatus();
-    QString getApi_setDeviceGPS();
-    QString getApi_setDeviceWifiLBS();
+    QString getApi_addDeviceGPS();
+    QString getApi_addDeviceWifiLBS();
     QString getApi_getDevicePosition();
 
 private:
@@ -63,8 +63,8 @@ private:
     QString mApi_isDeviceOnline;
     QString mApi_setDeviceStatus;
     QString mApi_getDeviceStatus;
-    QString mApi_setDeviceGPS;
-    QString mApi_setDeviceWifiLBS;
+    QString mApi_addDeviceGPS;
+    QString mApi_addDeviceWifiLBS;
     QString mApi_getDevicePosition;
 };
 

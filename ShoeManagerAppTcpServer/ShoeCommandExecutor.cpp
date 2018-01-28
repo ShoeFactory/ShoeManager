@@ -171,7 +171,7 @@ void ShoeCommandExecutor::receiveGPS(const int nDescriptor, QByteArray content)
     ShoeMessageGPS gps;
     gps.parseData(content);
 
-    auto *result = ShoeManagerNetwork::getInstance()->setDeviceGPS(imei,
+    auto *result = ShoeManagerNetwork::getInstance()->addDeviceGPS(imei,
                                                                    gps.getObject());
 
     connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
@@ -207,7 +207,7 @@ void ShoeCommandExecutor::receiveWifiPosition(const int nDescriptor, QByteArray 
     qDebug() << "==========WifiPosition========";
     qDebug() << wifiPosition.jsonString();
 
-    auto *result = ShoeManagerNetwork::getInstance()->setDeviceWifiLBS(imei,
+    auto *result = ShoeManagerNetwork::getInstance()->addDeviceWifiLBS(imei,
                                                                       wifiPosition.getObject());
 
     connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){

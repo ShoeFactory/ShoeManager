@@ -63,10 +63,10 @@ public:
     ShoeManagerNetworkResult *getDeviceStatus(QString imei);
 
     //! 添加GPS
-    ShoeManagerNetworkResult *setDeviceGPS(QString imei, QJsonObject object);
+    ShoeManagerNetworkResult *addDeviceGPS(QString imei, QJsonObject object);
 
     //! 添加wifilbs
-    ShoeManagerNetworkResult *setDeviceWifiLBS(QString imei, QJsonObject object);
+    ShoeManagerNetworkResult *addDeviceWifiLBS(QString imei, QJsonObject object);
 
     //! 获取定位
     ShoeManagerNetworkResult *getDevicePosition(QString imei);

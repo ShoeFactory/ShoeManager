@@ -8,7 +8,7 @@ ShoeManagerNetworkConfig *ShoeManagerNetworkConfig::getInstance()
 
 ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
 {
-//#define LoaclServer
+#define LoaclServer
 #ifdef LoaclServer
     mServer = "http://127.0.0.1:5555/api/v2.0/";
 #else
@@ -36,9 +36,10 @@ ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
     mApi_isDeviceOnline = "devicemanager/isonline";
     mApi_setDeviceStatus = "devicemanager/setstatus";
     mApi_getDeviceStatus = "devicemanager/getstatus";
-//    mApi_setDeviceGPS = ;
-//    mApi_setDeviceWifiLBS = ;
-//    mApi_getDevicePosition = ;
+
+    mApi_addDeviceGPS = "position/addgps";
+    mApi_addDeviceWifiLBS = "position/addwifilbs";
+    mApi_getDevicePosition = "position/current";
 }
 
 QString ShoeManagerNetworkConfig::getApi_passwordUpdate() const
@@ -71,14 +72,14 @@ QString ShoeManagerNetworkConfig::getApi_getDeviceStatus()
     return mServer + mApi_getDeviceStatus;
 }
 
-QString ShoeManagerNetworkConfig::getApi_setDeviceGPS()
+QString ShoeManagerNetworkConfig::getApi_addDeviceGPS()
 {
-    return mServer + mApi_setDeviceGPS;
+    return mServer + mApi_addDeviceGPS;
 }
 
-QString ShoeManagerNetworkConfig::getApi_setDeviceWifiLBS()
+QString ShoeManagerNetworkConfig::getApi_addDeviceWifiLBS()
 {
-    return mServer + mApi_setDeviceWifiLBS;
+    return mServer + mApi_addDeviceWifiLBS;
 }
 
 QString ShoeManagerNetworkConfig::getApi_getDevicePosition()

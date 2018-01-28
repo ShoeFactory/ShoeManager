@@ -157,24 +157,24 @@ ShoeManagerNetworkResult *ShoeManagerNetwork::getDeviceStatus(QString imei)
     return pNetwork->execJsonRequestAsyn(mConfig->getApi_getDeviceStatus(), "post", oJsonData);
 }
 
-ShoeManagerNetworkResult *ShoeManagerNetwork::setDeviceGPS(QString imei, QJsonObject object)
+ShoeManagerNetworkResult *ShoeManagerNetwork::addDeviceGPS(QString imei, QJsonObject object)
 {
     QJsonObject oJsonData = {
         {"sid", imei},
         {"gps", object}
     };
 
-    return pNetwork->execJsonRequestAsyn(mConfig->getApi_setDeviceGPS(), "post", oJsonData);
+    return pNetwork->execJsonRequestAsyn(mConfig->getApi_addDeviceGPS(), "post", oJsonData);
 }
 
-ShoeManagerNetworkResult *ShoeManagerNetwork::setDeviceWifiLBS(QString imei, QJsonObject object)
+ShoeManagerNetworkResult *ShoeManagerNetwork::addDeviceWifiLBS(QString imei, QJsonObject object)
 {
     QJsonObject oJsonData = {
         {"sid", imei},
         {"wifilbs", object}
     };
 
-    return pNetwork->execJsonRequestAsyn(mConfig->getApi_setDeviceWifiLBS(), "post", oJsonData);
+    return pNetwork->execJsonRequestAsyn(mConfig->getApi_addDeviceWifiLBS(), "post", oJsonData);
 }
 
 ShoeManagerNetworkResult *ShoeManagerNetwork::getDevicePosition(QString imei)
