@@ -48,6 +48,18 @@ void ShoeMessageGPS::getMessageLengthAndSatelliteCount(int &ML, int &SC)
     SC = (mlsc & 0x0F);
 }
 
+double ShoeMessageGPS::getLongitudeDouble()
+{
+    int longitude = getLongitude();
+
+    double temp = longitude / 30000.0;
+
+    int degree = int(temp / 60);
+    double smallDegree = temp -(int(temp / 60)) * 60;
+
+    return degree + smallDegree;
+}
+
 QString ShoeMessageGPS::getLongitudeString()
 {
     QByteArray longitudeByteArray = m_data.mid(7, 4);
@@ -71,6 +83,21 @@ quint32 ShoeMessageGPS::getLongitude()
     unsigned int longitude = longitudeByteArray.toHex().toUInt(&ok, 16);
 
     return longitude;
+}
+
+double ShoeMessageGPS::getLatitudeDouble()
+{
+    QByteArray latitudeByteArray = m_data.mid(11, 4);
+
+    bool ok;
+    unsigned int latitude = latitudeByteArray.toHex().toUInt(&ok, 16);
+
+    double temp = latitude / 30000.0;
+
+    int degree = int(temp / 60);
+    double smallDegree = temp -(int(temp / 60)) * 60;
+
+    return degree + smallDegree;
 }
 
 QString ShoeMessageGPS::getLatitudeString()
@@ -138,11 +165,11 @@ QJsonObject ShoeMessageGPS::getObject()
     object.insert("satellite_count", QJsonValue(satelliteCount));
 
     // 经度
-    qint64 longitude = (qint64)getLongitude();
+    double longitude = getLongitudeDouble();
     object.insert("longitude", QJsonValue(longitude));
 
     // 纬度
-    qint64 latitude = (qint64)getLatitude();
+    double latitude = getLatitudeDouble();
     object.insert("latitude", QJsonValue(latitude));
 
     // 速度
