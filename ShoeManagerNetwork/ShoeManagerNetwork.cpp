@@ -177,10 +177,10 @@ ShoeManagerNetworkResult *ShoeManagerNetwork::addDeviceWifiLBS(QString imei, QJs
     return pNetwork->execJsonRequestAsyn(mConfig->getApi_addDeviceWifiLBS(), "post", oJsonData);
 }
 
-ShoeManagerNetworkResult *ShoeManagerNetwork::getDevicePosition(QString imei)
+ShoeManagerNetworkResult *ShoeManagerNetwork::getDevicePosition(QStringList imeis)
 {
     QJsonObject oJsonData = {
-        {"sid", imei},
+        {"sid", imeis},
     };
 
     return pNetwork->execJsonRequestAsyn(mConfig->getApi_getDevicePosition(), "post", oJsonData);

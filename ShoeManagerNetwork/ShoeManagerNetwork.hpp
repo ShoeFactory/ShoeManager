@@ -69,7 +69,7 @@ public:
     ShoeManagerNetworkResult *addDeviceWifiLBS(QString imei, QJsonObject object);
 
     //! 获取定位
-    ShoeManagerNetworkResult *getDevicePosition(QString imei);
+    ShoeManagerNetworkResult *getDevicePosition(QStringList imeis);
 
 private:
     ShoeManagerNetwork();

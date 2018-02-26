@@ -1,4 +1,4 @@
-#ifndef BMAPCONTAINER_HPP
+﻿#ifndef BMAPCONTAINER_HPP
 #define BMAPCONTAINER_HPP
 
 #include <QWidget>
@@ -25,6 +25,8 @@ public slots:
 private:
     QWebEngineView *webView;
     QWebEnginePage *webPage;
+
+    BMapDataCenter *dataCenter;
 };
 
 #endif // BMAPCONTAINER_HPP

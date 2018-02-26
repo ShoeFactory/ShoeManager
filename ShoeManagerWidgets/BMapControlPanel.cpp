@@ -1,9 +1,10 @@
-#include "BMapControlPanel.hpp"
+﻿#include "BMapControlPanel.hpp"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include "ShoeManagerNetwork.hpp"
 #include "ShoeManagerNetworkResult.hpp"
+#include <QTimer>
 
 DeviceControlItem::DeviceControlItem(QWidget *parent)
     : QWidget(parent)
@@ -86,6 +87,13 @@ BMapControlPanel::BMapControlPanel(QWidget *parent) : QWidget(parent)
 
 void BMapControlPanel::initLayout()
 {
+
+    {
+        timerFetchDeviceData = new QTimer;
+        timerFetchDeviceData->setInterval(5000);
+    }
+
+
     auto *hboxMenu = new QHBoxLayout;
     {
         buttonJS = new QPushButton("Alert");
@@ -140,7 +148,7 @@ void BMapControlPanel::flushDeviceListResult()
     {
         QList<ShoeDeviceModel> deviceList;
         parseJson(deviceList, result->oReturnData);
-        updateData(deviceList);
+        updateDeviceList(deviceList);
     }
     else
     {
@@ -148,7 +156,7 @@ void BMapControlPanel::flushDeviceListResult()
     }
 }
 
-void BMapControlPanel::updateData(const QList<ShoeDeviceModel> modelList)
+void BMapControlPanel::updateDeviceList(const QList<ShoeDeviceModel> modelList)
 {
     for(auto newModel: modelList)
     {
@@ -194,11 +202,32 @@ void BMapControlPanel::updateData(const QList<ShoeDeviceModel> modelList)
             controlItem->deleteLater();
         }
     }
+}
 
+void BMapControlPanel::flushDevicePosition()
+{
+    // 只刷新当前订阅的
+    QStringList deviceList;
+    foreach(DeviceControlItem* device ,lControlItemList){
+       if(device->deviceModel().isSubscribed)
+           deviceList.append(device->deviceModel().imei);
+    }
+
+    auto *result = ShoeManagerNetwork::getInstance()->getDevicePosition(deviceList);
+    connect(result, &ShoeManagerNetworkResult::requestFinished, this, &BMapControlPanel::flushDevicePositionResult);
 }
 
 void BMapControlPanel::showEvent(QShowEvent *event)
 {
     flushDeviceList();
+    timerFetchDeviceData->start();
+
     QWidget::showEvent(event);
+}
+
+void BMapControlPanel::hideEvent(QHideEvent *event)
+{
+    timerFetchDeviceData->stop();
+
+    QWidget::hideEvent(event);
 }

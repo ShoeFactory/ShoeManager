@@ -1,4 +1,4 @@
-#include "BMapContainer.hpp"
+﻿#include "BMapContainer.hpp"
 #include <QHBoxLayout>
 #include <QMessageBox>
 
@@ -14,9 +14,12 @@ void BMapContainer::initLayout()
     webView = new QWebEngineView;
 
     QWebChannel *channel = new QWebChannel(this);
-    channel->registerObject(QStringLiteral("bmapContent"), this);
-    webPage->setWebChannel(channel);
+    channel->registerObject(QStringLiteral("containerUI"), this);
 
+    dataCenter  = BMapDataCenter::getInstance();
+    channel->registerObject(QStringLiteral("dataCenter"), dataCenter);
+
+    webPage->setWebChannel(channel);
     webView->setPage(webPage);
 
     QHBoxLayout *hboxMain = new QHBoxLayout;

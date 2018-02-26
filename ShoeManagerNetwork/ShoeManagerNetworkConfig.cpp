@@ -39,6 +39,7 @@ ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
 
     mApi_addDeviceGPS = "position/addgps";
     mApi_addDeviceWifiLBS = "position/addwifilbs";
+
     mApi_getDevicePosition = "position/current";
 }
 
