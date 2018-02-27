@@ -1,12 +1,11 @@
-#ifndef QUTILSFRAMELESSFORM_HPP
+﻿#ifndef QUTILSFRAMELESSFORM_HPP
 #define QUTILSFRAMELESSFORM_HPP
 
 #include "QUtilsFramelessDialog.hpp"
 #include <QFormLayout>
 #include <QLabel>
 
-
-class QUtilsFramelessForm : public QUtilsFramelessDialog
+class SHOEMANAGERCORESHARED_EXPORT QUtilsFramelessForm : public QUtilsFramelessDialog
 {
 public:
     QUtilsFramelessForm(QWidget *parent=nullptr);

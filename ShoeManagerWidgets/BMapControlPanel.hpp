@@ -85,7 +85,7 @@ protected:
     void hideEvent(QHideEvent *event);
 
 private:
-    QPushButton *flushDeviceList;   // 刷新设备列表
+    QPushButton *btnflushDeviceList;// 刷新设备列表
     QTimer *timerFetchDeviceData;   // 刷新设备数据
 
 private:

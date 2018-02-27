@@ -5,6 +5,10 @@
 #include "ShoeManagerNetwork.hpp"
 #include "ShoeManagerNetworkResult.hpp"
 #include <QTimer>
+#include <QJsonArray>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonValue>
 
 DeviceControlItem::DeviceControlItem(QWidget *parent)
     : QWidget(parent)
@@ -87,8 +91,8 @@ void BMapControlPanel::initLayout()
 
     auto *hboxMenu = new QHBoxLayout;
     {
-        flushDeviceList = new QPushButton("刷新");
-        hboxMenu->addWidget(flushDeviceList);
+        btnflushDeviceList = new QPushButton("刷新");
+        hboxMenu->addWidget(btnflushDeviceList);
     }
 
 
@@ -119,7 +123,7 @@ void BMapControlPanel::initLayout()
 
 void BMapControlPanel::initConnection()
 {
-    connect(flushDeviceList, &QPushButton::clicked, this, &BMapControlPanel::flushDeviceList);
+    connect(btnflushDeviceList, &QPushButton::clicked, this, &BMapControlPanel::flushDeviceList);
     connect(timerFetchDeviceData, &QTimer::timeout, [=](){
        flushDeviceStatus(m_CurrentDeviceModelMap.keys());
        flushDevicePosition(m_CurrentDeviceModelMap.keys() ,currentType);
@@ -137,7 +141,11 @@ void BMapControlPanel::flushDeviceListResult()
     auto *result = static_cast<ShoeManagerNetworkResult*>(sender());
     if(result->oReturnCode == 0)
     {
-        QStringList targetIMEIs; // Todo  从json中解析出设备列表
+        QList<ShoeDeviceModel> modelList;
+        parseJson(modelList, result->oReturnData);
+        QStringList targetIMEIs;
+        for(ShoeDeviceModel &model: modelList)
+            targetIMEIs.append(model.imei);
 
         QStringList currentIMEIs = m_CurrentDeviceModelMap.keys();      // 当前设备列表
         QStringList tobeRemovedIMEIs = m_CurrentDeviceModelMap.keys();  // 要从当前中删除的
@@ -181,14 +189,17 @@ void BMapControlPanel::flushDeviceListResult()
         for(ShoeDeviceModel *model : deviceModelList)
         {
             DeviceControlItem *newUI = new DeviceControlItem;
-            connect(newUI, &DeviceControlItem::switchButtonChecked, this, &BMapControlPanel::subscribeDevice);
             newUI->setDeviceModel(model);
+            connect(newUI, &DeviceControlItem::switchButtonChecked, this, &BMapControlPanel::subscribeDevice);
             vboxDevice->insertWidget(0, newUI);
 
             m_CurrentDeviceViewMap.insert(model->imei, newUI);
         }
 
         // endReset
+
+        // 拉到列表后 更新一下状态
+        flushDeviceStatus(m_CurrentDeviceModelMap.keys());
     }
     else
     {
@@ -227,9 +238,25 @@ void BMapControlPanel::flushDeviceStatusResult()
     auto *result = static_cast<ShoeManagerNetworkResult*>(sender());
     if(result->oReturnCode == 0)
     {
-        // todo 解析设备状态
+        // 解析设备状态
+        QJsonArray deviceStatusArray = result->oReturnData.toArray();
+        for(QJsonValue deviceStatusValue: deviceStatusArray)
+        {
+            QJsonObject deviceStatusObject = deviceStatusValue.toObject();
+            QString imei = deviceStatusObject["imei"].toString();
 
-        // 设置设备状态
+            if(m_CurrentDeviceModelMap.contains(imei))
+            {
+                auto *deviceModel = m_CurrentDeviceModelMap.value(imei);
+
+                deviceModel->name = deviceStatusObject["name"].toString();
+                deviceModel->isOnline = deviceStatusObject["isOnline"].toBool();
+                deviceModel->powerPercent = deviceStatusObject["power"].toDouble();
+                deviceModel->isSubscribed = deviceStatusObject["isSubscribed"].toBool();
+            }
+        }
+
+        // 更新设备界面
         QStringList imeis = m_CurrentDeviceModelMap.keys();
         for(QString imei : imeis)
         {
@@ -268,7 +295,7 @@ void BMapControlPanel::flushDevicePositionResult()
         }
 
         QJsonArray markerArray;
-        QJsonObject positionArray = result->oReturnData.toArray();
+        QJsonArray positionArray = result->oReturnData.toArray();
         foreach (QJsonValue positionValue, positionArray) {
             QJsonObject position = positionValue.toObject();
             QString imei = position["imei"].toString();

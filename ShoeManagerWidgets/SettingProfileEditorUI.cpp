@@ -1,4 +1,4 @@
-#include "SettingProfileEditorUI.hpp"
+﻿#include "SettingProfileEditorUI.hpp"
 #include "QUtilsFramLessMessageBox.hpp"
 #include <QBoxLayout>
 #include <QFormLayout>

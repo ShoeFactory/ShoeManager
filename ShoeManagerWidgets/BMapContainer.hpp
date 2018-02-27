@@ -18,10 +18,6 @@ public:
 
 signals:
 
-public slots:
-    void slotAlert();
-    void showMsgBox();
-
 private:
     QWebEngineView *webView;
     QWebEnginePage *webPage;

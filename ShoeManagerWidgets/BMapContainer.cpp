@@ -32,16 +32,5 @@ void BMapContainer::initLayout()
 
 void BMapContainer::initConnection()
 {
-    connect(BMapDataCenter::getInstance(), &BMapDataCenter::sigAlert,
-            this, &BMapContainer::slotAlert);
-}
 
-void BMapContainer::slotAlert()
-{
-    webPage->runJavaScript("showAlert()");
-}
-
-void BMapContainer::showMsgBox()
-{
-    QMessageBox::information(this, "GOOD", "callbackfromweb");
 }

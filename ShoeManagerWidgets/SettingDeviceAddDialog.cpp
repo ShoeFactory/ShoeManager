@@ -1,4 +1,4 @@
-#include "SettingDeviceAddDialog.hpp"
+﻿#include "SettingDeviceAddDialog.hpp"
 #include <QFormLayout>
 #include "ShoeManagerNetwork.hpp"
 #include "ShoeManagerNetworkResult.hpp"

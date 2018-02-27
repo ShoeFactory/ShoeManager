@@ -18,9 +18,9 @@ QString BMapDataCenter::getMarkers() const
 
 void BMapDataCenter::setMarkers(const QString &markers)
 {
-    if(markers == m_markers)
-        return;
+//    if(markers == m_markers)
+//        return;
 
     m_markers = markers;
-    emit markerChanged(m_markers);
+    emit markersChanged(m_markers);
 }

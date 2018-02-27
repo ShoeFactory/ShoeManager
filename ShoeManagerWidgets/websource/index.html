@@ -19,18 +19,27 @@
 <script type="text/javascript">
     // 百度地图API功能
     var map = new BMap.Map("allmap");    // 创建Map实例
-
-    map.centerAndZoom(new BMap.Point(116.404, 39.915), 11);  // 初始化地图,设置中心点坐标和地图级别
-    map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
-    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    var myInitCity = "北京";
+    map.centerAndZoom(myInitCity, 11);
 
     function myFun(result){
         var cityName = result.name;
-        map.setCenter(cityName);
-        // map.setCurrentCity("北京");          // 设置地图显示的城市 此项是必须设置的
+        myInitCity = cityName;
     }
     var myCity = new BMap.LocalCity();
     myCity.get(myFun);
+
+
+    var loadCount = 1;
+    map.addEventListener("tilesloaded",function(){
+        if(loadCount == 2){
+        alert(myInitCity);
+            map.centerAndZoom(myInitCity, 11);
+        }
+        loadCount = loadCount + 1;
+     });
+
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
 
     //添加地图类型控件
     map.addControl(new BMap.MapTypeControl({

@@ -1,4 +1,4 @@
-#include "AccountRegisterWidget.hpp"
+﻿#include "AccountRegisterWidget.hpp"
 #include "ShoeManagerNetworkResult.hpp"
 #include "ShoeManagerNetwork.hpp"
 #include <QDebug>

@@ -39,7 +39,7 @@ ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
     mApi_addDeviceWifiLBS = "position/addwifilbs";
 
     mApi_getDeviceStatus = "devicemanager/getstatus";
-    mApi_getDevicePosition = "position/current";
+    mApi_getDevicePosition = "position/latest";
 }
 
 QString ShoeManagerNetworkConfig::getApi_passwordUpdate() const

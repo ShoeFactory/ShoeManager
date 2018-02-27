@@ -13,6 +13,8 @@ include($$PWD/../ShoeManagerModel/ShoeManagerModel.pri)
 include($$PWD/../ShoeManagerNetwork/ShoeManagerNetwork.pri)
 
 CONFIG += c++11
+msvc:QMAKE_CXXFLAGS += -execution-charset:utf-8
+msvc:QMAKE_CXXFLAGS += -source-charset:utf-8
 
 TARGET = ShoeManagerWidgets
 TEMPLATE = lib

@@ -8,7 +8,7 @@
 class BMapDataCenter : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString m_markers READ getMarkers WRITE setMarkers NOTIFY markerChanged)
+    Q_PROPERTY(QString m_markers READ getMarkers WRITE setMarkers NOTIFY markersChanged)
 
 public:
 
@@ -18,7 +18,7 @@ public:
     void setMarkers(const QString &markers);
 
 signals:
-    void markerChanged(QString markers);
+    void markersChanged(QString markers);
 
 private:
     explicit BMapDataCenter(QObject *parent = nullptr);

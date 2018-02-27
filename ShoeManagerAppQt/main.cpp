@@ -6,6 +6,7 @@
 
 int main(int argc, char *argv[])
 {
+    qputenv("QTWEBENGINE_REMOTE_DEBUGGING", "9223");
     QApplication a(argc, argv);
     QtWebEngine::initialize();
 

@@ -1,5 +1,6 @@
 ﻿#include "ShoeManagerNetwork.hpp"
 #include <QJsonObject>
+#include <QJsonArray>
 
 ShoeManagerNetwork::ShoeManagerNetwork()
 {
@@ -115,7 +116,7 @@ ShoeManagerNetworkResult *ShoeManagerNetwork::setDeviceIsOnline(QString imei, bo
 {
     QJsonObject oJsonData = {
         {"sid", imei},
-        {"isOnline", online}
+        {"isOnline", isOnline}
     };
 
     return pNetwork->execJsonRequestAsyn(mConfig->getApi_setDeviceIsOnline(), "post", oJsonData);
@@ -144,7 +145,7 @@ ShoeManagerNetworkResult *ShoeManagerNetwork::setDevicePower(QString imei, int p
 ShoeManagerNetworkResult *ShoeManagerNetwork::getDeviceStatus(QStringList imeis)
 {
     QJsonObject oJsonData = {
-        {"sids", imeis},
+        {"sids", QJsonArray::fromStringList(imeis)},
     };
 
     return pNetwork->execJsonRequestAsyn(mConfig->getApi_getDeviceStatus(), "post", oJsonData);
@@ -173,7 +174,7 @@ ShoeManagerNetworkResult *ShoeManagerNetwork::addDeviceWifiLBS(QString imei, QJs
 ShoeManagerNetworkResult *ShoeManagerNetwork::getDevicePosition(QStringList imeis, int type)
 {
     QJsonObject oJsonData = {
-        {"sid", imeis},
+        {"sids", QJsonArray::fromStringList(imeis)},
         {"type", type}
     };
 
