@@ -31,15 +31,14 @@ ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
     mApi_unbindDevice = "account/devices/remove";
 
 
-    mApi_deviceOnline = "devicemanager/setonline";
-    mApi_deviceOffline = "devicemanager/setoffline";
-    mApi_isDeviceOnline = "devicemanager/isonline";
-    mApi_setDeviceStatus = "devicemanager/setstatus";
-    mApi_getDeviceStatus = "devicemanager/getstatus";
+    mApi_setDeviceIsOnline = "devicemanager/setisonline";
+    mApi_setDeviceIsSubcribed = "devicemanager/setissubscribed";
+    mApi_setDevicePower = "deviceManager/setpower";
 
     mApi_addDeviceGPS = "position/addgps";
     mApi_addDeviceWifiLBS = "position/addwifilbs";
 
+    mApi_getDeviceStatus = "devicemanager/getstatus";
     mApi_getDevicePosition = "position/current";
 }
 
@@ -48,24 +47,19 @@ QString ShoeManagerNetworkConfig::getApi_passwordUpdate() const
     return mServer + mApi_passwordUpdate;
 }
 
-QString ShoeManagerNetworkConfig::getApi_deviceOnline()
+QString ShoeManagerNetworkConfig::getApi_setDeviceIsOnline()
 {
-    return mServer + mApi_deviceOnline;
+    return mServer + mApi_setDeviceIsOnline;
 }
 
-QString ShoeManagerNetworkConfig::getApi_deviceOffline()
+QString ShoeManagerNetworkConfig::getApi_setDeviceIsSubscribed()
 {
-    return mServer + mApi_deviceOffline;
+    return mServer + mApi_setDeviceIsSubcribed;
 }
 
-QString ShoeManagerNetworkConfig::getApi_isDeviceOnline()
+QString ShoeManagerNetworkConfig::getApi_setDevicePower()
 {
-    return mServer + mApi_isDeviceOnline;
-}
-
-QString ShoeManagerNetworkConfig::getApi_setDeviceStatus()
-{
-    return mServer + mApi_setDeviceStatus;
+    return mServer + mApi_setDevicePower;
 }
 
 QString ShoeManagerNetworkConfig::getApi_getDeviceStatus()

@@ -1,7 +1,8 @@
-#include "ShoeDeviceModel.hpp"
+﻿#include "ShoeDeviceModel.hpp"
 #include <QJsonObject>
 #include <QJsonArray>
 
+// 编辑设备 新绑定解除绑定时有用到
 void parseJson(QList<ShoeDeviceModel> &result, QJsonValue value)
 {
     QJsonObject object = value.toObject();
@@ -16,6 +17,7 @@ void parseJson(QList<ShoeDeviceModel> &result, QJsonValue value)
         device.imei = deviceObject["sid"].toString();
         device.isOnline = deviceObject["isOnline"].toBool();
         device.powerPercent = deviceObject["power"].toDouble();
+        device.isSubscribed = deviceObject["isSubscribed"].toBool();
 
         result.append(device);
     }

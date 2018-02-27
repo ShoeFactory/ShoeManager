@@ -1,4 +1,4 @@
-#ifndef SHOEDEVICEMODEL_HPP
+﻿#ifndef SHOEDEVICEMODEL_HPP
 #define SHOEDEVICEMODEL_HPP
 
 #include <QObject>

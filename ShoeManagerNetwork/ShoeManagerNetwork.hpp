@@ -14,6 +14,10 @@ class SHOEMANAGERNETWORKSHARED_EXPORT ShoeManagerNetwork : public QObject
 public:
     static ShoeManagerNetwork *getInstance();
 
+    //=========================================
+    //                  动作
+    //=========================================
+
     //! 发送注册验证码
     ShoeManagerNetworkResult *registerQRCode(QString telephone);
 
@@ -32,14 +36,8 @@ public:
     //! 更新密码
     ShoeManagerNetworkResult *passwdUpdate(QString passwd);
 
-    //! 获取用户账号资料
-    ShoeManagerNetworkResult *userProfile();
-
     //! 修改用户账户资料
     ShoeManagerNetworkResult *userProfileUpdate(QString name);
-
-    //! 获取关联设备列表
-    ShoeManagerNetworkResult *bindDevices();
 
     //! 关联设备
     ShoeManagerNetworkResult *bindDevice(QString name, QString imei);
@@ -47,20 +45,14 @@ public:
     //! 取关设备
     ShoeManagerNetworkResult *unbindDevice(QString imei);
 
-    //! 设备在线
-    ShoeManagerNetworkResult *deviceOnline(QString imei);
+    //! 设备在线状态
+    ShoeManagerNetworkResult *setDeviceIsOnline(QString imei, bool isOnline);
 
-    //! 设备下线
-    ShoeManagerNetworkResult *deviceOffline(QString imei);
+    //! 设置设备电量
+    ShoeManagerNetworkResult *setDevicePower(QString imei, int power);
 
-    //! 设备是否在线
-    ShoeManagerNetworkResult *isDeviceOnline(QString imei);
-
-    //! 设置设备状态
-    ShoeManagerNetworkResult *setDeviceStatus(QString imei, QJsonObject object);
-
-    //! 获取设备状态
-    ShoeManagerNetworkResult *getDeviceStatus(QString imei);
+    //! 设置设备订阅
+    ShoeManagerNetworkResult *setDeviceIsSubscibed(QString imei, bool isSubscribed);
 
     //! 添加GPS
     ShoeManagerNetworkResult *addDeviceGPS(QString imei, QJsonObject object);
@@ -68,8 +60,21 @@ public:
     //! 添加wifilbs
     ShoeManagerNetworkResult *addDeviceWifiLBS(QString imei, QJsonObject object);
 
+    //=========================================
+    //                  查询
+    //=========================================
+
+    //! 获取用户账号资料
+    ShoeManagerNetworkResult *userProfile();
+
+    //! 获取关联设备列表
+    ShoeManagerNetworkResult *bindDevices();
+
+    //! 获取设备状态  （电量 是否订阅 是否）
+    ShoeManagerNetworkResult *getDeviceStatus(QStringList imeis);
+
     //! 获取定位
-    ShoeManagerNetworkResult *getDevicePosition(QStringList imeis);
+    ShoeManagerNetworkResult *getDevicePosition(QStringList imeis, int type);
 
 private:
     ShoeManagerNetwork();

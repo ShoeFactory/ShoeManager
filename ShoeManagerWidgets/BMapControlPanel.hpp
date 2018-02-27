@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QMap>
 
 #include "switchbutton.h"
 #include "QUtilsLayoutLine.hpp"
@@ -21,8 +22,10 @@ public:
     void initLayout();
     void initConnection();
 
-    void setDeviceModel(const ShoeDeviceModel &deviceModel);
-    ShoeDeviceModel deviceModel() const;
+    void setDeviceModel(const ShoeDeviceModel * const deviceModel);
+
+signals:
+    void switchButtonChecked(QString imei, bool checked);
 
 private:
     QLabel *pLabelName;
@@ -37,8 +40,6 @@ private:
     SwitchButton *pSwitchButton;
     QLabel *pLabelIMEIValue;
     QLabel *pLabelPowerValue;
-
-    ShoeDeviceModel mDeviceModel;
 };
 
 
@@ -53,14 +54,30 @@ public:
 
 signals:
 
+public:
+    enum PositionType{
+        PositionType_All = 0,
+        PositionType_GPS,
+        PositionType_LBS,
+    };
+private:
+    PositionType currentType = PositionType_GPS;
+
 public slots:
-    // 刷新设备列表(在线 电量)
+    // 刷新设备列表
     void flushDeviceList();
     void flushDeviceListResult();
-    void updateDeviceList(const QList<ShoeDeviceModel> modelList);
 
-    // 位置（只刷新订阅了的）
-    void flushDevicePosition();
+    // 订阅设备
+    void subscribeDevice(QString imei, bool checked);
+    void subscribeDeviceResult();
+
+    // 刷新设备状态（电量 是否在线 是否订阅）
+    void flushDeviceStatus(QStringList IMEIs);
+    void flushDeviceStatusResult();
+
+    // 位置（只刷新订阅了 分级别）
+    void flushDevicePosition(QStringList IMEIs, PositionType type = PositionType_GPS);
     void flushDevicePositionResult();
 
 protected:
@@ -68,16 +85,14 @@ protected:
     void hideEvent(QHideEvent *event);
 
 private:
-    QPushButton *buttonJS;
-    QPushButton *buttonFlush;
+    QPushButton *flushDeviceList;   // 刷新设备列表
+    QTimer *timerFetchDeviceData;   // 刷新设备数据
 
+private:
+    QMap<QString, ShoeDeviceModel*> m_CurrentDeviceModelMap;
+    QMap<QString, DeviceControlItem*> m_CurrentDeviceViewMap;
     QVBoxLayout *vboxDevice;
 
-    // 每个设备 一个小的控制界面
-    QList<DeviceControlItem*> lControlItemList;
-
-    // 定时刷新设备数据 （是否在线 电量 位置）
-    QTimer *timerFetchDeviceData;
 };
 
 #endif // BMAPCONTROLPANEL_HPP

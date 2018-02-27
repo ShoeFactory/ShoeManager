@@ -1,14 +1,4 @@
-﻿function showAlert() {
-    alert('this is web alert');
-}
-
-function onShowMsgBox() {
-    if (containerUI) {
-      containerUI.showMsgBox();
-    }
-}
-
-function reset_markers(newMarkers){
+﻿function reset_markers(newMarkers){
     // bmapContent里的markers存的是json字符串
     var markers = JSON.parse(newMarkers);
 

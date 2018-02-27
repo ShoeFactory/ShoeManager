@@ -57,26 +57,17 @@ void DeviceControlItem::initLayout()
 void DeviceControlItem::initConnection()
 {
     connect(pSwitchButton, &SwitchButton::checkedChanged, [=](bool checked){
-        mDeviceModel.isSubscribed = checked;
+        emit switchButtonChecked(pLabelIMEIValue->text(), checked);
     });
 }
 
-void DeviceControlItem::setDeviceModel(const ShoeDeviceModel &deviceModel)
+void DeviceControlItem::setDeviceModel(const ShoeDeviceModel * const deviceModel)
 {
-    mDeviceModel = deviceModel;
-
-    pLabelName->setText(mDeviceModel.name);
-    pLabelStatusValue->setText(mDeviceModel.isOnline? "在线": "离线");
-    pLabelIMEIValue->setText(mDeviceModel.imei);
-
-    QString power = QString("%1").arg(mDeviceModel.powerPercent, 0, 'f', 2);
-    pLabelPowerValue->setText(power);
-    pSwitchButton->setChecked(mDeviceModel.isSubscribed);
-}
-
-ShoeDeviceModel DeviceControlItem::deviceModel() const
-{
-    return mDeviceModel;
+    pLabelName->setText(deviceModel->name);
+    pLabelIMEIValue->setText(deviceModel->imei);
+    pSwitchButton->setChecked(deviceModel->isSubscribed);
+    pLabelStatusValue->setText(deviceModel->isOnline? "在线": "离线");
+    pLabelPowerValue->setText(QString("%1").arg(deviceModel->powerPercent, 0, 'f', 2));
 }
 
 BMapControlPanel::BMapControlPanel(QWidget *parent) : QWidget(parent)
@@ -96,11 +87,8 @@ void BMapControlPanel::initLayout()
 
     auto *hboxMenu = new QHBoxLayout;
     {
-        buttonJS = new QPushButton("Alert");
-        hboxMenu->addWidget(buttonJS);
-
-        buttonFlush = new QPushButton("刷新");
-        hboxMenu->addWidget(buttonFlush);
+        flushDeviceList = new QPushButton("刷新");
+        hboxMenu->addWidget(flushDeviceList);
     }
 
 
@@ -131,8 +119,11 @@ void BMapControlPanel::initLayout()
 
 void BMapControlPanel::initConnection()
 {
-    connect(buttonJS, &QPushButton::clicked, BMapDataCenter::getInstance(), &BMapDataCenter::slotAlert);
-    connect(buttonFlush, &QPushButton::clicked, this, &BMapControlPanel::flushDeviceList);
+    connect(flushDeviceList, &QPushButton::clicked, this, &BMapControlPanel::flushDeviceList);
+    connect(timerFetchDeviceData, &QTimer::timeout, [=](){
+       flushDeviceStatus(m_CurrentDeviceModelMap.keys());
+       flushDevicePosition(m_CurrentDeviceModelMap.keys() ,currentType);
+    });
 }
 
 void BMapControlPanel::flushDeviceList()
@@ -146,9 +137,58 @@ void BMapControlPanel::flushDeviceListResult()
     auto *result = static_cast<ShoeManagerNetworkResult*>(sender());
     if(result->oReturnCode == 0)
     {
-        QList<ShoeDeviceModel> deviceList;
-        parseJson(deviceList, result->oReturnData);
-        updateDeviceList(deviceList);
+        QStringList targetIMEIs; // Todo  从json中解析出设备列表
+
+        QStringList currentIMEIs = m_CurrentDeviceModelMap.keys();      // 当前设备列表
+        QStringList tobeRemovedIMEIs = m_CurrentDeviceModelMap.keys();  // 要从当前中删除的
+        QStringList tobeAddedIMEIs;                                     // 要添加到当前中的
+
+        // 计算出要添加和删除的
+        for(QString imei: targetIMEIs)
+        {
+            if(!currentIMEIs.contains(imei))
+                tobeAddedIMEIs.append(imei);
+            tobeRemovedIMEIs.removeAll(imei);
+        }
+
+        // 新添
+        for(QString imei: tobeAddedIMEIs)
+        {
+            ShoeDeviceModel *deviceModel = new ShoeDeviceModel;
+            deviceModel->imei = imei;
+            m_CurrentDeviceModelMap.insert(imei, deviceModel);
+        }
+
+        // 删除过时
+        for(QString imei: tobeRemovedIMEIs)
+        {
+            ShoeDeviceModel *deviceModel = m_CurrentDeviceModelMap.value(imei);
+            m_CurrentDeviceModelMap.remove(imei);
+            delete deviceModel;
+        }
+
+        // beginReset;
+
+        // 推毁
+        QList<DeviceControlItem*> deviceControlList = m_CurrentDeviceViewMap.values();
+        for(DeviceControlItem *item : deviceControlList)
+            vboxDevice->removeWidget(item);
+        qDeleteAll(deviceControlList);
+        m_CurrentDeviceViewMap.clear();
+
+        // 重建
+        QList<ShoeDeviceModel*> deviceModelList = m_CurrentDeviceModelMap.values();
+        for(ShoeDeviceModel *model : deviceModelList)
+        {
+            DeviceControlItem *newUI = new DeviceControlItem;
+            connect(newUI, &DeviceControlItem::switchButtonChecked, this, &BMapControlPanel::subscribeDevice);
+            newUI->setDeviceModel(model);
+            vboxDevice->insertWidget(0, newUI);
+
+            m_CurrentDeviceViewMap.insert(model->imei, newUI);
+        }
+
+        // endReset
     }
     else
     {
@@ -156,65 +196,93 @@ void BMapControlPanel::flushDeviceListResult()
     }
 }
 
-void BMapControlPanel::updateDeviceList(const QList<ShoeDeviceModel> modelList)
+void BMapControlPanel::subscribeDevice(QString imei, bool checked)
 {
-    for(auto newModel: modelList)
+    auto *result = ShoeManagerNetwork::getInstance()->setDeviceIsSubscibed(imei, checked);
+    connect(result, &ShoeManagerNetworkResult::requestFinished, this, &BMapControlPanel::subscribeDeviceResult);
+}
+
+void BMapControlPanel::subscribeDeviceResult()
+{
+    auto *result = static_cast<ShoeManagerNetworkResult*>(sender());
+    if(result->oReturnCode == 0)
     {
-        bool existedInUI = false;
-        DeviceControlItem *existedUI;
-
-        for(auto *controlItem: lControlItemList)
-        {
-            if(newModel == controlItem->deviceModel())
-            {
-                existedUI = controlItem;
-                existedInUI = true;
-                break;
-            }
-        }
-
-        // 在界面上更新后台状态改变的
-        if(existedInUI)
-        {
-            auto oldModel = existedUI->deviceModel();
-            oldModel.powerPercent = newModel.powerPercent;
-            oldModel.isOnline = newModel.isOnline;
-            existedUI->setDeviceModel(oldModel);
-        }
-        // 在界面上插入后台新添加的
-        else
-        {
-            DeviceControlItem *newUI = new DeviceControlItem;
-            newUI->setDeviceModel(newModel);
-            vboxDevice->insertWidget(0, newUI);
-            lControlItemList.append(newUI);
-        }
+        flushDeviceStatus(m_CurrentDeviceModelMap.keys());
+        flushDevicePosition(m_CurrentDeviceModelMap.keys(), currentType);
     }
-
-    // 从界面上删除已经被后台删除的
-    for(int i=lControlItemList.count()-1; i>=0 ; i--)
+    else
     {
-        auto *controlItem = lControlItemList.at(i);
-        if(!modelList.contains(controlItem->deviceModel()))
-        {
-            vboxDevice->removeWidget(controlItem);
-            lControlItemList.removeOne(controlItem);
-            controlItem->deleteLater();
-        }
+        qDebug() << result->oReturnMessage;
     }
 }
 
-void BMapControlPanel::flushDevicePosition()
+void BMapControlPanel::flushDeviceStatus(QStringList IMEIs)
 {
-    // 只刷新当前订阅的
-    QStringList deviceList;
-    foreach(DeviceControlItem* device ,lControlItemList){
-       if(device->deviceModel().isSubscribed)
-           deviceList.append(device->deviceModel().imei);
-    }
+    auto *result = ShoeManagerNetwork::getInstance()->getDeviceStatus(IMEIs);
+    connect(result, &ShoeManagerNetworkResult::requestFinished, this, &BMapControlPanel::flushDeviceStatusResult);
+}
 
-    auto *result = ShoeManagerNetwork::getInstance()->getDevicePosition(deviceList);
+void BMapControlPanel::flushDeviceStatusResult()
+{
+    auto *result = static_cast<ShoeManagerNetworkResult*>(sender());
+    if(result->oReturnCode == 0)
+    {
+        // todo 解析设备状态
+
+        // 设置设备状态
+        QStringList imeis = m_CurrentDeviceModelMap.keys();
+        for(QString imei : imeis)
+        {
+            DeviceControlItem *view = m_CurrentDeviceViewMap.value(imei);
+            ShoeDeviceModel  *model = m_CurrentDeviceModelMap.value(imei);
+
+            if(view && model)
+            {
+                view->setDeviceModel(model);
+            }
+        }
+    }
+    else
+    {
+        qDebug() << result->oReturnMessage;
+    }
+}
+
+void BMapControlPanel::flushDevicePosition(QStringList IMEIs, BMapControlPanel::PositionType type)
+{
+    auto *result = ShoeManagerNetwork::getInstance()->getDevicePosition(IMEIs, type);
     connect(result, &ShoeManagerNetworkResult::requestFinished, this, &BMapControlPanel::flushDevicePositionResult);
+}
+
+void BMapControlPanel::flushDevicePositionResult()
+{
+    auto *result = static_cast<ShoeManagerNetworkResult*>(sender());
+    if(result->oReturnCode == 0)
+    {
+        QStringList subscribeDevices;
+        QList<ShoeDeviceModel*> modelList = m_CurrentDeviceModelMap.values();
+        for(ShoeDeviceModel *model : modelList)
+        {
+            if(model->isSubscribed)
+                subscribeDevices.append(model->imei);
+        }
+
+        QJsonArray markerArray;
+        QJsonObject positionArray = result->oReturnData.toArray();
+        foreach (QJsonValue positionValue, positionArray) {
+            QJsonObject position = positionValue.toObject();
+            QString imei = position["imei"].toString();
+            if(subscribeDevices.contains(imei))
+                markerArray.append(position);
+        }
+
+        QJsonDocument doc(markerArray);
+        BMapDataCenter::getInstance()->setMarkers(doc.toJson(QJsonDocument::Compact));
+    }
+    else
+    {
+        qDebug() << result->oReturnMessage;
+    }
 }
 
 void BMapControlPanel::showEvent(QShowEvent *event)

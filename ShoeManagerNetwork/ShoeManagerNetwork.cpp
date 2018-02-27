@@ -111,47 +111,40 @@ ShoeManagerNetworkResult *ShoeManagerNetwork::unbindDevice(QString imei)
     return pNetwork->execJsonRequestSync(mConfig->getApi_unbindDevice(), "post", oJsonData);
 }
 
-ShoeManagerNetworkResult *ShoeManagerNetwork::deviceOnline(QString imei)
-{
-    QJsonObject oJsonData = {
-        {"sid", imei}
-    };
-
-    return pNetwork->execJsonRequestAsyn(mConfig->getApi_deviceOnline(), "post", oJsonData);
-}
-
-ShoeManagerNetworkResult *ShoeManagerNetwork::deviceOffline(QString imei)
-{
-    QJsonObject oJsonData = {
-        {"sid", imei}
-    };
-
-    return pNetwork->execJsonRequestAsyn(mConfig->getApi_deviceOffline(), "post", oJsonData);
-}
-
-ShoeManagerNetworkResult *ShoeManagerNetwork::isDeviceOnline(QString imei)
-{
-    QJsonObject oJsonData = {
-        {"sid", imei}
-    };
-
-    return pNetwork->execJsonRequestAsyn(mConfig->getApi_isDeviceOnline(), "post", oJsonData);
-}
-
-ShoeManagerNetworkResult *ShoeManagerNetwork::setDeviceStatus(QString imei, QJsonObject object)
+ShoeManagerNetworkResult *ShoeManagerNetwork::setDeviceIsOnline(QString imei, bool isOnline)
 {
     QJsonObject oJsonData = {
         {"sid", imei},
-        {"status", object}
+        {"isOnline", online}
     };
 
-    return pNetwork->execJsonRequestAsyn(mConfig->getApi_setDeviceStatus(), "post", oJsonData);
+    return pNetwork->execJsonRequestAsyn(mConfig->getApi_setDeviceIsOnline(), "post", oJsonData);
 }
 
-ShoeManagerNetworkResult *ShoeManagerNetwork::getDeviceStatus(QString imei)
+ShoeManagerNetworkResult *ShoeManagerNetwork::setDeviceIsSubscibed(QString imei, bool isSubscribed)
 {
     QJsonObject oJsonData = {
         {"sid", imei},
+        {"isSubscribed", isSubscribed}
+    };
+
+    return pNetwork->execJsonRequestAsyn(mConfig->getApi_setDeviceIsSubscribed(), "post", oJsonData);
+}
+
+ShoeManagerNetworkResult *ShoeManagerNetwork::setDevicePower(QString imei, int power)
+{
+    QJsonObject oJsonData = {
+        {"sid", imei},
+        {"power", power}
+    };
+
+    return pNetwork->execJsonRequestAsyn(mConfig->getApi_setDevicePower(), "post", oJsonData);
+}
+
+ShoeManagerNetworkResult *ShoeManagerNetwork::getDeviceStatus(QStringList imeis)
+{
+    QJsonObject oJsonData = {
+        {"sids", imeis},
     };
 
     return pNetwork->execJsonRequestAsyn(mConfig->getApi_getDeviceStatus(), "post", oJsonData);
@@ -177,10 +170,11 @@ ShoeManagerNetworkResult *ShoeManagerNetwork::addDeviceWifiLBS(QString imei, QJs
     return pNetwork->execJsonRequestAsyn(mConfig->getApi_addDeviceWifiLBS(), "post", oJsonData);
 }
 
-ShoeManagerNetworkResult *ShoeManagerNetwork::getDevicePosition(QStringList imeis)
+ShoeManagerNetworkResult *ShoeManagerNetwork::getDevicePosition(QStringList imeis, int type)
 {
     QJsonObject oJsonData = {
         {"sid", imeis},
+        {"type", type}
     };
 
     return pNetwork->execJsonRequestAsyn(mConfig->getApi_getDevicePosition(), "post", oJsonData);

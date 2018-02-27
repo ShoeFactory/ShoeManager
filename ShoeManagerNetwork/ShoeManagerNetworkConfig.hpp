@@ -27,11 +27,10 @@ public:
 
     QString getApi_passwordUpdate() const;
 
+    QString getApi_setDeviceIsOnline();
+    QString getApi_setDeviceIsSubscribed();
+    QString getApi_setDevicePower();
 
-    QString getApi_deviceOnline();
-    QString getApi_deviceOffline();
-    QString getApi_isDeviceOnline();
-    QString getApi_setDeviceStatus();
     QString getApi_getDeviceStatus();
     QString getApi_addDeviceGPS();
     QString getApi_addDeviceWifiLBS();
@@ -54,17 +53,18 @@ private:
     QString mApi_userProfileUpdate;
     QString mApi_passwordUpdate;
 
-    QString mApi_bindDevices;
     QString mApi_bindDevice;
     QString mApi_unbindDevice;
 
-    QString mApi_deviceOnline;
-    QString mApi_deviceOffline;
-    QString mApi_isDeviceOnline;
-    QString mApi_setDeviceStatus;
-    QString mApi_getDeviceStatus;
+    QString mApi_setDeviceIsOnline;
+    QString mApi_setDeviceIsSubcribed;
+    QString mApi_setDevicePower;
+
     QString mApi_addDeviceGPS;
     QString mApi_addDeviceWifiLBS;
+
+    QString mApi_bindDevices;
+    QString mApi_getDeviceStatus;
     QString mApi_getDevicePosition;
 };
 

@@ -60,7 +60,7 @@ void ShoeCommandExecutor::slotDisconnected(const int nDescriptor)
     qDebug() << "[断开" + QString::number(nDescriptor) + "]";
 
     auto imei = mDescriptorIMEI.value(nDescriptor);
-    auto *result = ShoeManagerNetwork::getInstance()->deviceOffline(imei);
+    auto *result = ShoeManagerNetwork::getInstance()->setDeviceIsOnline(imei, false);
 
     connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
         qDebug() << result->oRequestData["requestUrl"].toString()
@@ -117,7 +117,7 @@ void ShoeCommandExecutor::receiveLogin(const int nDescriptor, QByteArray content
     QString IMEI = loginReceived.getIMEI();
     mDescriptorIMEI.insert(nDescriptor, IMEI);
 
-    auto *result = ShoeManagerNetwork::getInstance()->deviceOnline(IMEI);
+    auto *result = ShoeManagerNetwork::getInstance()->setDeviceIsOnline(IMEI, true);
 
     connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
         qDebug() << "imei" << IMEI;
@@ -150,8 +150,8 @@ void ShoeCommandExecutor::receiveStatus(const int nDescriptor, QByteArray conten
     ShoeMessageStatus status;
     status.parseData(content);
 
-    auto *result = ShoeManagerNetwork::getInstance()->setDeviceStatus(imei,
-                                                                      status.getObject());
+    auto *result = ShoeManagerNetwork::getInstance()->setDevicePower(imei, status.power);
+
     connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
         qDebug() << result->oRequestData["requestUrl"].toString()
                 << result->oReturnCode << result->oReturnMessage;

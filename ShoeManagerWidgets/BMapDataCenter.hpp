@@ -25,17 +25,6 @@ private:
 
     /// 要绘制的实时点（json）
     QString m_markers;
-
-
-signals:
-    void sigAlert();
-public slots:
-    void slotAlert();
-private:
-    QMap<QString, QPoint> currentPositionMap;
-    QMap<QString, QList<QPoint>> historyPositionMap;
-
-
 };
 
 #endif // BMAPDATACENTER_HPP
