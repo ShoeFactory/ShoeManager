@@ -33,7 +33,7 @@
     var loadCount = 1;
     map.addEventListener("tilesloaded",function(){
         if(loadCount == 2){
-        alert(myInitCity);
+        console.log(myInitCity);
             map.centerAndZoom(myInitCity, 11);
         }
         loadCount = loadCount + 1;

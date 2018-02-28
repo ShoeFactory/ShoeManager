@@ -61,7 +61,7 @@ public:
         PositionType_LBS,
     };
 private:
-    PositionType currentType = PositionType_GPS;
+    PositionType currentType = PositionType_All;
 
 public slots:
     // 刷新设备列表

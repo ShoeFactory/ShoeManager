@@ -21,6 +21,7 @@ void AccountLoginWidget::loginButtonClicked()
         // 登录成功 获得token
         auto object = result->oReturnData.toObject();
         auto token = object["token"].toString();
+        qDebug() << "User Token:" << token;
         ShoeManagerNetworkConfig::getInstance()->setToken(token);
 
         emit loginSucceed();

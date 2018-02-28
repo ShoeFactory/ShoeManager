@@ -4,9 +4,16 @@
 
     var map_marker_set = new Set();
     for(arrayIndex in markersArray){
-        var markerObject = markersArray[arrayIndex]
-        var point = new BMap.Point(markerObject.lan, markerObject.lon);
+        var markerObject = markersArray[arrayIndex];
+        var gpsdata = markerObject.gps;
+
+        if (!gpsdata && typeof gpsdata != "undefined" && gpsdata != 0)
+            continue;
+        var point = new BMap.Point(gpsdata.longitude, gpsdata.latitude);
         var label = new BMap.Label(markerObject.name, {offset:new BMap.Size(20,-10)});
+
+        console.log(point);
+        console.log(label);
 
         var map_marker = new BMap.Marker(point);
         map_marker.setLabel(label);
