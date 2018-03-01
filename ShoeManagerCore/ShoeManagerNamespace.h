@@ -32,7 +32,7 @@ enum
     TCPSERVER_PORT    = 7008,    // 服务器监听端口
     WAIT_CONNECT_TIMEOUT = 3000, // 连接服务器超时时间
     CONNECT_TRY_TIMES = 1,       // 连接尝试次数
-    HEARTBEAT_INTERVAL = 5*60*1000, // 5分钟
+    HEARTBEAT_INTERVAL = 5*60,   // 5分钟 300秒
 };
 
 }
