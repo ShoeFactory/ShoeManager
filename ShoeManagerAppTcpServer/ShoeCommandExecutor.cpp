@@ -132,7 +132,8 @@ void ShoeCommandExecutor::receiveUpdateTime(const int nDescriptor, QByteArray co
 
     // 7878 07 30 E00705053718 0D0A GMT 时间
     // E00705053718 ==> 16年7月5日5点55分24秒
-    QDateTime datetime = QDateTime::currentDateTimeUtc();
+    //QDateTime datetime = QDateTime::currentDateTimeUtc();
+    QDateTime datetime = QDateTime::currentDateTime();
     QString dateTimeString = datetime.toString("yyyyMMddhhmmss");
     dateTimeString.remove(0, 2);
     QByteArray dateTimeByteArray = QByteArray::fromHex(dateTimeString.toUtf8());
