@@ -103,7 +103,7 @@ void ShoeTcpSocket::receiveRule(QByteArray &recvBuffer)
 
         /*
          *  0x780x78+数据长度+协议号+数据内容+0x0d0x0a
-         *          数据长度=(协议号+数据内容)的值为数
+         *           数据长度=(协议号+数据内容)的值为数
          *  特殊几条不是这个规则的在协议详细内容中有相应说明
          */
         int dataLength = stopPosition - sizeof(qint8) * 3;

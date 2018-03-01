@@ -189,5 +189,13 @@ QJsonObject ShoeMessageGPS::getObject()
 
 void ShoeMessageGPS::parseData(const QByteArray &data)
 {
-    m_data = data;
+    // GPS 也是一个异常包
+    if(data.length() == 20)
+    {
+        m_data = data;
+        m_data.remove(0, 2);
+    }
+    else
+        m_data = data;;
+
 }
