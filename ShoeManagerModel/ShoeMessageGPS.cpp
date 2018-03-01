@@ -50,44 +50,23 @@ void ShoeMessageGPS::getMessageLengthAndSatelliteCount(int &ML, int &SC)
 
 double ShoeMessageGPS::getLongitudeDouble()
 {
-    int longitude = getLongitude();
+    QByteArray longitudeByteArray = m_data.mid(11, 4);
+
+    bool ok;
+    unsigned int longitude = longitudeByteArray.toHex().toUInt(&ok, 16);
+
 
     double temp = longitude / 30000.0;
 
     int degree = int(temp / 60);
-    double smallDegree = temp -(int(temp / 60)) * 60;
+    double smallDegree = (temp -(int(temp / 60)) * 60) / 100.0;
 
     return degree + smallDegree;
-}
-
-QString ShoeMessageGPS::getLongitudeString()
-{
-    QByteArray longitudeByteArray = m_data.mid(7, 4);
-
-    bool ok;
-    unsigned int longitude = longitudeByteArray.toHex().toUInt(&ok, 16);
-
-    double temp = longitude / 30000.0;
-
-    int degree = int(temp / 60);
-    double smallDegree = temp -(int(temp / 60)) * 60;
-
-    return QString::number(degree) + "°" + QString::number(smallDegree, 'f', 4) + "'";
-}
-
-quint32 ShoeMessageGPS::getLongitude()
-{
-    QByteArray longitudeByteArray = m_data.mid(7, 4);
-
-    bool ok;
-    unsigned int longitude = longitudeByteArray.toHex().toUInt(&ok, 16);
-
-    return longitude;
 }
 
 double ShoeMessageGPS::getLatitudeDouble()
 {
-    QByteArray latitudeByteArray = m_data.mid(11, 4);
+    QByteArray latitudeByteArray = m_data.mid(7, 4);
 
     bool ok;
     unsigned int latitude = latitudeByteArray.toHex().toUInt(&ok, 16);
@@ -95,34 +74,9 @@ double ShoeMessageGPS::getLatitudeDouble()
     double temp = latitude / 30000.0;
 
     int degree = int(temp / 60);
-    double smallDegree = temp -(int(temp / 60)) * 60;
+    double smallDegree = (temp -(int(temp / 60)) * 60 ) / 100;
 
     return degree + smallDegree;
-}
-
-QString ShoeMessageGPS::getLatitudeString()
-{
-    QByteArray latitudeByteArray = m_data.mid(11, 4);
-
-    bool ok;
-    unsigned int latitude = latitudeByteArray.toHex().toUInt(&ok, 16);
-
-    double temp = latitude / 30000.0;
-
-    int degree = int(temp / 60);
-    double smallDegree = temp -(int(temp / 60)) * 60;
-
-    return QString::number(degree) + "°" + QString::number(smallDegree, 'f', 4) + "'";
-}
-
-quint32 ShoeMessageGPS::getLatitude()
-{
-    QByteArray latitudeByteArray = m_data.mid(11, 4);
-
-    bool ok;
-    unsigned int latitude = latitudeByteArray.toHex().toUInt(&ok, 16);
-
-    return latitude;
 }
 
 int ShoeMessageGPS::getSpeed()
@@ -155,6 +109,7 @@ QJsonObject ShoeMessageGPS::getObject()
 
     // 日期
     QString dateTimeString = getDateTime().toString("yyyyMMddhhmmss");
+
     object.insert("datetime", QJsonValue(dateTimeString));
 
     // 消息长度 卫星个数
