@@ -8,7 +8,7 @@ ShoeManagerNetworkConfig *ShoeManagerNetworkConfig::getInstance()
 
 ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
 {
-#define LoaclServer
+//#define LoaclServer
 #ifdef LoaclServer
     mServer = "http://127.0.0.1:5555/api/v2.0/";
 #else
@@ -33,7 +33,7 @@ ShoeManagerNetworkConfig::ShoeManagerNetworkConfig()
 
     mApi_setDeviceIsOnline = "devicemanager/setisonline";
     mApi_setDeviceIsSubcribed = "devicemanager/setissubscribed";
-    mApi_setDevicePower = "deviceManager/setpower";
+    mApi_setDevicePower = "devicemanager/setpower";
 
     mApi_addDeviceGPS = "position/addgps";
     mApi_addDeviceWifiLBS = "position/addwifilbs";
