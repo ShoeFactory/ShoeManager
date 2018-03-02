@@ -43,7 +43,7 @@
             if(nameArray.length == bmapGPSArray.length)
             {
                 var map_marker_set = new Set();
-                for (var i = 0; i <= Array.length; i++)
+                for (var i = 0; i < Array.length; i++)
                 {
                     var map_marker = new BMap.Marker(bmapGPSArray[i]);
                     var label = new BMap.Label(nameArray[i], {offset:new BMap.Size(20,-10)});
@@ -51,12 +51,9 @@
                     map_marker_set.add(map_marker);
                 }
                 
-                ;
-
-                map_marker_set.forEach(function(marker)
-                {
-                    window.globalBMap.addOverlay(marker);
-                });
+                for (var marker of map_marker_set) { // 遍历Set
+                   window.globalBMap.addOverlay(marker);
+                }
             
             }
         }
