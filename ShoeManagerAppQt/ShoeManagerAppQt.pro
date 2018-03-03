@@ -6,6 +6,8 @@
 
 QT += widgets webenginewidgets webchannel webengine
 
+RC_ICONS = myappico.ico
+
 DESTDIR += $$PWD/../bin
 LIBS += -L$$PWD/../bin
 include($$PWD/../ShoeManagerCore/ShoeManagerCore.pri)
