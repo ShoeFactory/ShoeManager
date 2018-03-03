@@ -46,7 +46,7 @@
                 for (var i = 0; i < Array.length; i++)
                 {
                     var map_marker = new BMap.Marker(bmapGPSArray[i]);
-                    var label = new BMap.Label(nameArray[i], {offset:new BMap.Size(20,-10)});
+                    var label = new BMap.Label(nameArray[i]+"("+bmapGPSArray[i].lng.toString().substring(0,7)+","+bmapGPSArray[i].lat.toString().substring(0,7)+")", {offset:new BMap.Size(20,-10)});
                     map_marker.setLabel(label);
                     map_marker_set.add(map_marker);
                 }
