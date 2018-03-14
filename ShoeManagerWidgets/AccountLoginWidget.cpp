@@ -7,10 +7,6 @@ AccountLoginWidget::AccountLoginWidget(QWidget *parent) : QWidget(parent)
 {
     initLayout();
     initConnection();
-
-
-    mLineTelephone->setText("18710944280");
-    mLinePasswd->setText("'''");
 }
 
 void AccountLoginWidget::loginButtonClicked()
@@ -38,6 +34,7 @@ void AccountLoginWidget::initLayout()
     mLabelPasswd = new QLabel("密码");
     mLineTelephone = new QLineEdit;
     mLinePasswd = new QLineEdit;
+    mLinePasswd->setEchoMode(QLineEdit::Password);
 
     mLabelPrompt = new QLabel;
 

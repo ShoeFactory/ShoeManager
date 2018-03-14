@@ -36,6 +36,8 @@
         if(data.status === 0)
         {
         
+            console.log("data.points");
+            console.log(data.points);
             for (var i = 0; i < data.points.length; i++) {
                 bmapGPSArray.push(data.points[i]);
             }
@@ -43,7 +45,7 @@
             if(nameArray.length == bmapGPSArray.length)
             {
                 var map_marker_set = new Set();
-                for (var i = 0; i < Array.length; i++)
+                for (var i = 0; i < nameArray.length; i++)
                 {
                     var map_marker = new BMap.Marker(bmapGPSArray[i]);
                     var label = new BMap.Label(nameArray[i]+"("+bmapGPSArray[i].lng.toString().substring(0,7)+","+bmapGPSArray[i].lat.toString().substring(0,7)+")", {offset:new BMap.Size(20,-10)});
@@ -51,7 +53,8 @@
                     map_marker_set.add(map_marker);
                 }
                 
-                for (var marker of map_marker_set) { // 遍历Set
+                for (var marker of map_marker_set)
+                { // 遍历Set
                    window.globalBMap.addOverlay(marker);
                 }
             
@@ -68,6 +71,8 @@
       // 转换成百度gps
       setTimeout(function(){
           var convertor = new BMap.Convertor();
+          console.log("realGPSArray");
+          console.log(realGPSArray);
           convertor.translate(realGPSArray, 1, 5, translateCallback)
       }, 1000);
 
