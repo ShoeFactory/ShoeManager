@@ -109,13 +109,24 @@ void ShoeCommandExecutor::receiveLogin(const int nDescriptor, QByteArray content
     ShoeMessageLogin loginReceived;
     loginReceived.parseData(content);
 
-    ShoeMessagePacket packet;
-    packet.msgType = PacketType_Login;
-    packet.msgContent = QByteArray();
-    commServer->sendPacket(packet, nDescriptor);
-
     QString IMEI = loginReceived.getIMEI();
     mDescriptorIMEI.insert(nDescriptor, IMEI);
+
+    {
+        ShoeMessagePacket packet;
+        packet.msgType = PacketType_Login;
+        packet.msgContent = QByteArray();
+        commServer->sendPacket(packet, nDescriptor);
+    }
+
+    {
+        ShoeMessagePacket packet;
+        packet.msgType = PacketType_Status;
+        QString timeInterval("03");
+        packet.msgContent = QByteArray::fromHex(timeInterval.toUtf8());
+        commServer->sendPacket(packet, nDescriptor);
+    }
+
 
     auto *result = ShoeManagerNetwork::getInstance()->setDeviceIsOnline(IMEI, true);
 
@@ -210,7 +221,7 @@ void ShoeCommandExecutor::receiveWifiPosition(const int nDescriptor, QByteArray 
     qDebug() << wifiPosition.jsonString();
 
     auto *result = ShoeManagerNetwork::getInstance()->addDeviceWifiLBS(imei,
-                                                                      wifiPosition.getObject());
+                                                                       wifiPosition.getObject());
 
     connect(result, &ShoeManagerNetworkResult::requestFinished, [=](){
         qDebug() << result->oRequestData["requestUrl"].toString()
