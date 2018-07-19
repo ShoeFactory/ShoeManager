@@ -1,4 +1,4 @@
-#ifndef ACCOUNTEDITOR_HPP
+﻿#ifndef ACCOUNTEDITOR_HPP
 #define ACCOUNTEDITOR_HPP
 
 #include "shoemanagerwidgets_global.h"
@@ -7,7 +7,7 @@
 #include <QGridLayout>
 #include <QFormLayout>
 #include <QVBoxLayout>
-#include <QStackedLayout>
+#include <QStackedWidget>
 
 #include "QUtilsFramelessDialog.hpp"
 #include "AccountLoginWidget.hpp"
@@ -35,7 +35,7 @@ private:
     AccountLoginWidget *mLogin;
     AccountPasswdWidget *mPasswd;
     AccountRegisterWidget *mRegister;
-    QStackedLayout *mStacked;
+    QStackedWidget *mStacked;
 
     QPushButton *mButtonReturnToLogin;
 };

@@ -16,6 +16,7 @@ QUtilsFramelessWidget::QUtilsFramelessWidget(QWidget *parent)
 
         mTitleIcon = new QLabel;
         mTitleText = new QLabel;
+        mTitleText->setStyleSheet("QLabel { background-color : transparent; color : white; }");
         mTitleToolBar = new QWidget;
 
         mTitleButtonBar = new QWidget;
@@ -128,6 +129,11 @@ void QUtilsFramelessWidget::setTitleHight(int height)
     mTitleHeight = height;
     mTitle->setFixedHeight(mTitleHeight);
     pHelper->setTitleHeight(mTitleHeight);
+}
+
+void QUtilsFramelessWidget::setTitleText(QString text)
+{
+    mTitleText->setText(text);
 }
 
 void QUtilsFramelessWidget::setTitleToolBarLayout(QLayout *layout)

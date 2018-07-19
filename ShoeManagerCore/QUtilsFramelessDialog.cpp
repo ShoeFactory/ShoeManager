@@ -16,6 +16,7 @@ QUtilsFramelessDialog::QUtilsFramelessDialog(QWidget *parent)
 
         mTitleIcon = new QLabel;
         mTitleText = new QLabel;
+        mTitleText->setStyleSheet("QLabel { background-color : transparent; color : white; }");
         mTitleToolBar = new QWidget;
 
         mTitleButtonBar = new QWidget;
@@ -112,9 +113,9 @@ QUtilsFramelessDialog::QUtilsFramelessDialog(QWidget *parent)
                           "}");
 
     mBody->setObjectName("FramelessDialog_Body");
-    mBody->setStyleSheet("QWidget#FramelessDialog_Body{"
-                          "background-color: white;"
-                          "}");
+//    mBody->setStyleSheet("QWidget#FramelessDialog_Body{"
+//                          "background-color: white;"
+//                          "}");
 
     mMainFrame->setObjectName("FramelessDialog_MainFrame");
     mMainFrame->setStyleSheet("QFrame#FramelessDialog_MainFrame{"

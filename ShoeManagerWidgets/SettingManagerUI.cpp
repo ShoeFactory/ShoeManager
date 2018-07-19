@@ -1,4 +1,4 @@
-#include "SettingManagerUI.hpp"
+﻿#include "SettingManagerUI.hpp"
 #include <QHBoxLayout>
 #include <QDebug>
 #include "SettingProfileEditorUI.hpp"
@@ -46,6 +46,8 @@ void SettingManagerUI::initLayout()
 
         resize(600, 450);
     }
+
+    setTitleText("设置");
 }
 
 void SettingManagerUI::initConnection()

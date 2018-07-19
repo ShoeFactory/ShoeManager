@@ -1,5 +1,6 @@
-#include "AccountEditorUI.hpp"
+﻿#include "AccountEditorUI.hpp"
 #include "IconFont.hpp"
+#include <QCoreApplication>
 
 AccountEditorUI::AccountEditorUI(QWidget *parent)
     : QUtilsFramelessDialog(parent)
@@ -55,14 +56,36 @@ void AccountEditorUI::initLayout()
     mPasswd = new AccountPasswdWidget;
     mRegister = new AccountRegisterWidget;
 
-    mStacked = new QStackedLayout;
+    mStacked = new QStackedWidget;
     mStacked->addWidget(mLogin);
     mStacked->addWidget(mPasswd);
     mStacked->addWidget(mRegister);
 
-    this->setBodyLayout(mStacked);
+    QHBoxLayout *hboxLayoutEditUI = new QHBoxLayout;
+
+    QWidget *widgetEditUI = new QWidget;
+    {
+        QVBoxLayout *vbox = new QVBoxLayout;
+        vbox->addStretch(4);
+        vbox->addWidget(mStacked);
+        vbox->addStretch(5);
+        hboxLayoutEditUI->addSpacing(280);
+        hboxLayoutEditUI->addLayout(vbox);
+        hboxLayoutEditUI->addSpacing(80);
+    }
+
+    hboxLayoutEditUI->addWidget(widgetEditUI);
+    this->setBodyLayout(hboxLayoutEditUI);
 
     setCurrentWidget(Account_login);
+    setTitleText("消防员定位监测系统");
+    setFixedSize(600,400);
+
+    this->setAutoFillBackground(true); // 这句要加上, 否则可能显示不出背景图.
+    QPalette palette = this->palette();
+    QString loginpng = qApp->applicationDirPath() + "/login.png";
+    palette.setBrush(QPalette::Window, QBrush(QPixmap(loginpng)));
+    this->setPalette(palette);
 }
 
 void AccountEditorUI::initConnection()

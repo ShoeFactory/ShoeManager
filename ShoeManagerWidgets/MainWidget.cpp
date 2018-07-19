@@ -1,4 +1,4 @@
-#include "MainWidget.hpp"
+﻿#include "MainWidget.hpp"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QDebug>
@@ -30,7 +30,7 @@ void MainWidget::initLayout()
         QMenu *menu = new QMenu;
         mButtonUserProfile->setMenu(menu);
 
-        mActionProfileManage = menu->addAction("个人资料");
+        mActionProfileManage = menu->addAction("账户设置");
         mActionDevicesManage = menu->addAction("设备管理");
 
         hboxHeader->setMargin(0);
@@ -52,6 +52,8 @@ void MainWidget::initLayout()
         hboxMain->setSpacing(0);
         this->setBodyLayout(hboxMain);
     }
+
+    setTitleText("消防员定位监测系统");
 }
 
 void MainWidget::initConnection()
